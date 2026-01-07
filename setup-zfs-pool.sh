@@ -121,7 +121,7 @@ validate_device() {
     fi
     
     # Check if device is already in use
-    if zpool status 2>/dev/null | grep -q "${device}"; then
+    if zpool status 2>/dev/null | grep -qw "${device}"; then
         log_error "Device ${device} is already in use by a ZFS pool"
         return 1
     fi
@@ -436,6 +436,7 @@ main() {
             exit 1
         fi
         
+        # Parse devices to add (Note: device paths should not contain commas or spaces)
         IFS=',' read -ra add_devs <<< "${PARSED_ADD_DEVICES}"
         if add_drives_to_pool "${POOL_NAME}" "${add_devs[@]}"; then
             show_pool_status "${POOL_NAME}"
@@ -475,7 +476,7 @@ main() {
         exit 1
     fi
     
-    # Parse device list
+    # Parse device list (Note: device paths should not contain commas or spaces)
     IFS=',' read -ra pool_devs <<< "${PARSED_DEVICES}"
     
     if [[ ${#pool_devs[@]} -eq 0 ]]; then
