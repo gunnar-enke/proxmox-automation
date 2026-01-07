@@ -1,0 +1,102 @@
+#############################################################################
+# ZFS Pool Configuration File
+#
+# This file contains configuration options for the ZFS pool setup script.
+# Copy this file to zfs-pool.conf and adjust values as needed.
+#
+# Usage: cp zfs-pool.conf.example zfs-pool.conf
+#############################################################################
+
+# Pool Configuration
+# ------------------
+
+# Name of the ZFS pool to create
+POOL_NAME="tank"
+
+# Pool type: raidz1, raidz2, raidz3, mirror, or stripe
+# - raidz1: RAID-Z with single parity (tolerates 1 disk failure)
+# - raidz2: RAID-Z with double parity (tolerates 2 disk failures)
+# - raidz3: RAID-Z with triple parity (tolerates 3 disk failures)
+# - mirror: Mirrored vdevs (best performance, 50% usable space)
+POOL_TYPE="raidz1"
+
+# Mount point for the pool
+MOUNT_POINT="/mnt/tank"
+
+# Storage Optimization
+# --------------------
+
+# Record size - optimal for large files
+# 1M is recommended for videos, backups, and images
+# Other options: 128K, 256K, 512K, 1M
+RECORDSIZE="1M"
+
+# Access time tracking
+# 'off' improves performance by not updating access time on reads
+# 'on' tracks access time (adds overhead)
+ATIME="off"
+
+# Compression
+# -----------
+
+# Enable compression (highly recommended)
+# Compression saves space and can improve performance
+ENABLE_COMPRESSION="true"
+
+# Compression algorithm
+# - lz4: Fast, low CPU usage, good compression (recommended)
+# - gzip: Better compression, higher CPU usage
+# - zstd: Modern algorithm, good balance (ZFS 2.0+)
+COMPRESSION_ALGORITHM="lz4"
+
+# Deduplication
+# -------------
+
+# Enable deduplication (NOT recommended for most use cases)
+# Requires significant RAM: ~5GB per TB of unique data
+# Only enable if you have duplicate data and sufficient RAM
+ENABLE_DEDUP="false"
+
+# NVMe Cache Configuration
+# -------------------------
+
+# Enable ZIL (write log) on NVMe
+# Only set to 'true' if you have a dedicated device for ZIL
+# and you need synchronous write performance
+ENABLE_ZIL="false"
+
+# Logging Configuration
+# ---------------------
+
+# Directory for log files
+LOG_DIR="/var/log/zfs-automation"
+
+# Example Device Configurations
+# ------------------------------
+# Uncomment and adjust these if you want to specify devices in the config file
+# instead of on the command line
+
+# HDD devices for the main pool (comma-separated)
+# PARSED_DEVICES="/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde"
+
+# NVMe device for L2ARC read cache
+# PARSED_CACHE_DEVICE="/dev/nvme0n1p1"
+
+# NVMe device for ZIL write log (optional, requires ENABLE_ZIL="true")
+# PARSED_LOG_DEVICE="/dev/nvme0n1p2"
+
+#############################################################################
+# Advanced Options
+#############################################################################
+
+# Automatic Snapshot Configuration (for future use)
+# ENABLE_SNAPSHOTS="true"
+# SNAPSHOT_SCHEDULE="hourly"
+
+# Scrub Schedule (for future use)
+# ENABLE_AUTO_SCRUB="true"
+# SCRUB_SCHEDULE="monthly"
+
+# Email Notifications (for future use)
+# ENABLE_EMAIL="false"
+# EMAIL_ADDRESS="admin@example.com"
