@@ -155,8 +155,6 @@ create_zfs_pool() {
     done
     
     # Create the pool
-    local create_cmd="zpool create -f -m ${MOUNT_POINT} ${pool_name} ${POOL_TYPE}"
-    
     if zpool create -f -m "${MOUNT_POINT}" "${pool_name}" "${POOL_TYPE}" "${devices[@]}"; then
         log_success "ZFS pool '${pool_name}' created successfully"
         return 0
@@ -347,10 +345,10 @@ EOF
 }
 
 parse_arguments() {
-    local devices=""
+    local devices_str=""
     local cache_device=""
     local log_device=""
-    local add_devices=""
+    local add_devices_str=""
     local show_status=false
     
     while [[ $# -gt 0 ]]; do
@@ -368,7 +366,7 @@ parse_arguments() {
                 shift 2
                 ;;
             -d|--devices)
-                devices="$2"
+                devices_str="$2"
                 shift 2
                 ;;
             -c|--cache)
@@ -385,7 +383,7 @@ parse_arguments() {
                 shift 2
                 ;;
             -a|--add)
-                add_devices="$2"
+                add_devices_str="$2"
                 shift 2
                 ;;
             -s|--status)
@@ -405,10 +403,10 @@ parse_arguments() {
     done
     
     # Export parsed values
-    export PARSED_DEVICES="${devices}"
+    export PARSED_DEVICES="${devices_str}"
     export PARSED_CACHE_DEVICE="${cache_device}"
     export PARSED_LOG_DEVICE="${log_device}"
-    export PARSED_ADD_DEVICES="${add_devices}"
+    export PARSED_ADD_DEVICES="${add_devices_str}"
     export PARSED_SHOW_STATUS="${show_status}"
 }
 
